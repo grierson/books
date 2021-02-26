@@ -3,27 +3,45 @@
 == Glossary
 
 Classical (Black box, Bottom up)::
-Test given input then should get this output.
-Testing the requirement, so tests are more generic meaning they are less brittle.
-* Test-Driven Development By Example - Kent Beck
+Test input and output.
+Only testing the requirement so tests are more generic making them less brittle.
+* (add 5 5) => 10 'Don't care how it works just as long as it gives me the correct results'
 
 London (Mockist, Top down)::
-Test that internal implementation is called and stub output.
 Testing the implementation.
+Test that internal implementation is called and stub output.
 * Growing Object Oriented Software guided by Tests
 
 Shared dependency::
 Mutable state shared across tests.
 If state changes then tests will become unpredictable because of race conditions. 
 
+If the first fact did the swap then then second fact ran the check the test would fail.
+
+[source,clojure]
+----
+(def state (atom ""))
+
+(fact "abc is not a long string"
+  (swap state "abc")
+  (long-str? state) => false)
+
+(fact "abcdefg is a long string"
+  (swap state "abcdefg")
+  (long-str? state) => true)
+
+(defn long-str? [s]
+  (> (count s) 5))
+----
+
 Unit test::
 * Verifies small piece of code.
 ** Classical -> Unit of behaviour
-** London -> An object
+** London -> Object
 * Quick
 * Isolated
 ** Classical -> From other tests
-** London -> Unit
+** London -> Object
 
 [source,clojure]
 ----
@@ -38,7 +56,7 @@ Unit test::
 (fact "london"
   (let [product "shampoo"
         storeMock (reify IStore (in-stock? [product] true))
-        _ (add storeMock product 10)
+        _ (stock storeMock product 10)
         customer (->Customer)
         _ (purchase customer store product 5)]
     (called stockMock RemoveInventory) => 1))
