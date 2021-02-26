@@ -1,0 +1,65 @@
+= What is a unit test
+
+== Glossary
+
+Classical (Black box, Bottom up)::
+Test given input then should get this output.
+Testing the requirement, so tests are more generic meaning they are less brittle.
+* Test-Driven Development By Example - Kent Beck
+
+London (Mockist, Top down)::
+Test that internal implementation is called and stub output.
+Testing the implementation.
+* Growing Object Oriented Software guided by Tests
+
+Shared dependency::
+Mutable state shared across tests.
+If state changes then tests will become unpredictable because of race conditions. 
+
+Unit test::
+* Verifies small piece of code.
+** Classical -> Unit of behaviour
+** London -> An object
+* Quick
+* Isolated
+** Classical -> From other tests
+** London -> Unit
+
+[source,clojure]
+----
+(fact "classical"
+  (let [store (->Store)
+        product "shampoo"
+        _ (stock store product 10)
+        customer (->Customer)
+        _ (purchase customer store product 5)]
+    (getInventory store product) => 5))
+
+(fact "london"
+  (let [product "shampoo"
+        storeMock (reify IStore (in-stock? [product] true))
+        _ (add storeMock product 10)
+        customer (->Customer)
+        _ (purchase customer store product 5)]
+    (called stockMock RemoveInventory) => 1))
+----
+
+== Isolation
+
+Classical and London differ on Isolation.
+
+* Classical -> Isolate the test
+** Can run tests in parallel
+* London -> Isolate the implementation 
+
+== Naming
+
+Describe tests for Domain expert or Business analyst.
+
+NOTE: 'should be' is an anti-pattern use 'is'
+
+* Good
+** Delivery with a past date is invalid
+
+* Bad
+** DeliveryManager_Delivery_Invalid_Date

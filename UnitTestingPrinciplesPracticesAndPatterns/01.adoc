@@ -1,0 +1,58 @@
+= Goal of unit testing
+
+WHAT IS AN ENTERPRISE APPLICATION?::
+An enterprise application is an application that aims at automating or assisting an organization’s inner processes. It can take many forms, but usually the characteristics of an enterprise software are
+
+* High business logic complexity
+* Long lifespan
+* Moderate amounts of data
+* Low performance requirements
+
+
+== Code design
+If code is difficult to test then badly designed but not indicator that it is good.
+
+== Benefits
+* Regression testing (Safety net)
+** Not breaking old stuff
+** Refactor 
+
+== Coverage
+Measurement to see how much of code is covered by tests.
+
+[source,clojure]
+----
+(fact "Is long string"
+    (long-str? "abc") => false)
+
+(defn long-str? [s]
+    (> (count s) 5))
+----
+
+[source,clojure]
+----
+(fact "Is long string"
+    (long-str? "abc") => false)
+
+(defn long-str? [s]
+    (do (api/call)
+        (> (count s) 5)))
+----
+
+In the second example it only tests the out come of the string length call not how the `api/call` works. It only checks that it's executed.
+
+=== Test Coverage
+Executed lines / LOC.
+
+Above test would be 100% coverage even though only one branch is tested.
+
+=== Branch Coverage
+Branches / number of branches.
+
+Above test would be 50% as only below 5 is tested.
+
+== Successful test suite
+
+* Target most important
+** Domain / Core
+* Maximum value with minimum maintenance

@@ -1,0 +1,13 @@
+= 4 pillars of good unit test
+
+. Regressions
+. Resistance Refactor
+. Fast feedback
+. Maintainability
+
+. Actually run them
+. Target important stuff
+.. Not all production code is equal
+. High value, Low maintenance
+
+== 1.
