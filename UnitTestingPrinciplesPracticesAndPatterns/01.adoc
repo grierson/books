@@ -8,7 +8,6 @@ An enterprise application is an application that aims at automating or assisting
 * Moderate amounts of data
 * Low performance requirements
 
-
 == Code design
 If code is difficult to test then it's badly designed however it's not indicator that it is good design.
 
@@ -20,9 +19,6 @@ If code is difficult to test then it's badly designed however it's not indicator
 == Coverage
 Measurement to see how much of code is covered by tests.
 
-=== Code Coverage VS Branch Coverage
-With Code coverage the coverage would be 100% because all lines are test whereas with Branch coverage the coverage would only be 50% because we are only testing the less than 5 usecase not the over 5 usecase.
-
 [source,clojure]
 ----
 (fact "Is long string"
@@ -32,7 +28,18 @@ With Code coverage the coverage would be 100% because all lines are test whereas
     (> (count s) 5))
 ----
 
-Here the test would also be 100% for both however we are only testing the string length logic not if the `api/call` works.
+
+=== Test Coverage
+Executed lines / LOC.
+Above test would be 100% coverage even though only one branch is tested.
+
+=== Branch Coverage
+Branches / number of branches.
+
+Above test would be 50% coverage because only the less than 5 is tested on the over 5.
+
+=== Coverage with Side Effects
+This test would be 100% for both however we are only testing the string length logic not if the `api/call` works.
 
 [source,clojure]
 ----
@@ -44,18 +51,8 @@ Here the test would also be 100% for both however we are only testing the string
         (> (count s) 5)))
 ----
 
-==== Test Coverage
-Executed lines / LOC.
-
-Above test would be 100% coverage even though only one branch is tested.
-
-==== Branch Coverage
-Branches / number of branches.
-
-Above test would be 50% as only below 5 is tested.
-
 == Successful test suite
 
-* Target most important
-** Domain / Core
+* Target most important usecases
+** Domain / Core layers
 * Maximum value with minimum maintenance

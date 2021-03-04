@@ -1,0 +1,63 @@
+= Better testing
+
+== Arrange step
+
+* Use `make->x` function so you can share the arrange step across tests but parameterized to change the values for each usecase. 
+
+[source,clojure]
+----
+(defn make-store [product quantity]
+  (let [store (->Store)]
+    (AddInventory store product quantity)
+    store))
+
+(fact "Purchase succeeds when enough inventory"
+  (let [product Shampoo
+        store (make-store product 10)
+        customer (->Customer)
+        response (purchase customer store product 5)]
+    (response => true)
+    (get-inventory store product) => 5))
+
+(fact "Purchase fails when not enough inventory"
+  (let [product Shampoo
+        store (make-store product 10)
+        customer (->Customer)
+        response (purchase customer store product 15)]
+    (response => false)
+    (get-inventory store product) => 10))
+----
+
+== Naming Tests
+
+* Write test scenario for non programmer (domain expert)
+* Testing unit of behaviour
+** Not testing specific implementation (IsDeliveryValid)
+
+Bad::
+`IsDeliveryValid InvalidDate Returns False`
+
+Good::
+`Delivery with invalid date is invalid`
+
+== Triangultion
+
+Use paramaterised tests for more test cases.
+
+[source,clojure]
+----
+(defn make-date [amount] 
+  (>> (now) (days amount))
+
+(tabular
+  (fact "Detect invalid delivery date"
+    (valid-date (make-date ?days) => false
+    ?days
+    -1
+    0
+    1))
+
+(fact "Earliest delivery date 2 days from now"
+  (valid-date (make-date 2))) => true)
+----
+
