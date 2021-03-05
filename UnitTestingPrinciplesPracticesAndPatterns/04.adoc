@@ -1,13 +1,24 @@
 = 4 pillars of good unit test
 
 . Regressions
-. Resistance Refactor
+. Resistance to Refactor
 . Fast feedback
 . Maintainability
 
-. Actually run them
-. Target important stuff
-.. Not all production code is equal
-. High value, Low maintenance
+== Regressions
 
-== 1.
+Needed to maintain growth of project.
+
+* Amount of code being executed within test
+* Complexity of code (Domain logic > boiler plate)
+** More tests for domain logic than boiler plate
+
+== Resistance to refactor
+Use classical style testing
+
+London style leads to
+* Lose intrest/confidence it tests
+*** Can't refactor code without breaking tests
+*** So you lose confidence in tests
+**** So you don't run your tests
+**** So you don't refactor
