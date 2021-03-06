@@ -1,21 +1,24 @@
-import * as plays from "./plays.json";
-import * as invoices from "./invoices.json";
+// node --experimental-json-modules main.js
 
-// node --experimental-json-modules main.mjs
+import plays from "./plays.json";
+import invoices from "./invoices.json";
 
-function statement(invoice, plays) {
+export function statement(invoice, plays) {
   let totalAmount = 0;
+
   let volumeCredits = 0;
+
   let result = `Statement for ${invoice.customer}\n`;
 
-  const format = new Intl.NumberFormat("en-US", {
+  const { format } = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
-  }).format;
+  });
 
-  for (let perf of invoice.performances) {
+  for (const perf of invoice.performances) {
     const play = plays[perf.playID];
+
     let thisAmount = 0;
 
     switch (play.type) {
@@ -47,7 +50,7 @@ function statement(invoice, plays) {
     volumeCredits += Math.max(perf.audience - 30, 0);
 
     // Add extra credit for every ten comedy attendees
-    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if (play.type === "comedy") volumeCredits += Math.floor(perf.audience / 5);
 
     // Print line for this order
     result += ` ${play.name}: ${format(thisAmount / 100)} (${
@@ -58,11 +61,8 @@ function statement(invoice, plays) {
   }
 
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
+
   result += `You earned ${volumeCredits} credits\n`;
 
   return result;
 }
-
-// Run the code
-const result = statement(invoices[0], plays);
-console.log(result);
