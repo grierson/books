@@ -1,68 +1,85 @@
-// node --experimental-json-modules main.js
+import plays from "./plays";
 
-import plays from "./plays.json";
-import invoices from "./invoices.json";
-
-export function statement(invoice, plays) {
-  let totalAmount = 0;
-
-  let volumeCredits = 0;
-
+export function statement(invoice) {
   let result = `Statement for ${invoice.customer}\n`;
 
-  const { format } = new Intl.NumberFormat("en-US", {
+  for (let perf of invoice.performances) {
+    // Print line for this order
+    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
+      perf.audience
+    } seats)\n`;
+  }
+
+  result += `Amount owed is ${usd(totalAmount(invoice))}\n`;
+  result += `You earned ${totalVolumeCredits(invoice)} credits\n`;
+
+  return result;
+}
+
+function totalAmount(invoice) {
+  let result = 0;
+  for (let perf of invoice.performances) {
+    result += amountFor(perf);
+  }
+  return result;
+}
+
+function totalVolumeCredits(invoice) {
+  let volumeCredits = 0;
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+  }
+  return volumeCredits;
+}
+
+function usd(aNumber) {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
-  });
+  }).format(aNumber / 100);
+}
 
-  for (const perf of invoice.performances) {
-    const play = plays[perf.playID];
+function volumeCreditsFor(perf) {
+  let volumeCredits = 0;
+  volumeCredits += Math.max(perf.audience - 30, 0);
 
-    let thisAmount = 0;
+  if (playFor(perf).type === "comedy")
+    volumeCredits += Math.floor(perf.audience / 5);
 
-    switch (play.type) {
-      case "tragedy":
-        thisAmount = 40000;
+  return volumeCredits;
+}
 
-        if (perf.audience > 30) {
-          thisAmount += 1000 * (perf.audience - 30);
-        }
+function playFor(aPerformance) {
+  return plays[aPerformance.playID];
+}
 
-        break;
+function amountFor(aPerformance) {
+  let result = 0;
 
-      case "comedy":
-        thisAmount = 30000;
+  switch (playFor(aPerformance).type) {
+    case "tragedy":
+      result = 40000;
 
-        if (perf.audience > 20) {
-          thisAmount += 10000 + 500 * (perf.audience - 20);
-        }
+      if (aPerformance.audience > 30) {
+        result += 1000 * (aPerformance.audience - 30);
+      }
 
-        thisAmount += 300 * perf.audience;
+      break;
 
-        break;
+    case "comedy":
+      result = 30000;
 
-      default:
-        throw new Error(`Unknown type: ${play.type}`);
-    }
+      if (aPerformance.audience > 20) {
+        result += 10000 + 500 * (aPerformance.audience - 20);
+      }
 
-    // Add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
+      result += 300 * aPerformance.audience;
 
-    // Add extra credit for every ten comedy attendees
-    if (play.type === "comedy") volumeCredits += Math.floor(perf.audience / 5);
+      break;
 
-    // Print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${
-      perf.audience
-    } seats)\n`;
-
-    totalAmount += thisAmount;
+    default:
+      throw new Error(`Unknown type: ${playFor(aPerformance).type}`);
   }
-
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
-
-  result += `You earned ${volumeCredits} credits\n`;
-
   return result;
 }
