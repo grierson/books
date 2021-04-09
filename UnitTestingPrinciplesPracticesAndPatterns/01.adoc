@@ -9,12 +9,16 @@ An enterprise application is an application that aims at automating or assisting
 * Low performance requirements
 
 == Code design
-If code is difficult to test then it's badly designed however it's not indicator that it is good design.
+Difficult to test = badly designed 
+Easy to test != good design.
 
 == Benefits
 * Regression testing
 ** Not breaking old stuff
-** Refactor 
+** Refactoring
+
+* Ensure meeting requirements
+** Can test edge cases easily
 
 == Coverage
 Measurement to see how much of code is covered by tests.
@@ -30,16 +34,10 @@ Measurement to see how much of code is covered by tests.
 
 
 === Test Coverage
-Executed lines / LOC.
-Above test would be 100% coverage even though only one branch is tested.
+100% coverage even though only one branch is tested.
 
 === Branch Coverage
-Branches / number of branches.
-
-Above test would be 50% coverage because only the less than 5 is tested on the over 5.
-
-=== Coverage with Side Effects
-This test would be 100% for both however we are only testing the string length logic not if the `api/call` works.
+50% coverage because only the less than 5 case is tested not the over 5 case.
 
 [source,clojure]
 ----
@@ -50,6 +48,9 @@ This test would be 100% for both however we are only testing the string length l
     (do (api/call)
         (> (count s) 5)))
 ----
+
+=== Coverage with Side Effects
+100% coverage however we are only testing output not side effects
 
 == Successful test suite
 

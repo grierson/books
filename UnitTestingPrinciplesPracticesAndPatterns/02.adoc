@@ -3,8 +3,8 @@
 == Glossary
 
 Classical (Black box, Bottom up)::
-Test input and output.
-Only testing the requirement so tests are more generic making them less brittle.
+Testing the output.
+Less brittle as not testing how only the output.
 * (add 5 5) => 10 'Don't care how it works just as long as it gives me the correct results'
 
 London (Mockist, Top down)::
@@ -16,7 +16,7 @@ Shared dependency::
 Mutable state shared across tests.
 If state changes then tests will become unpredictable because of race conditions. 
 
-If the first fact did the swap then then second fact ran the check the test would fail.
+If first test swap's then then second fact runs it would fail.
 
 [source,clojure]
 ----
@@ -36,7 +36,7 @@ If the first fact did the swap then then second fact ran the check the test woul
 
 Unit test::
 * Verifies small piece of code.
-** Classical -> Unit of behaviour
+** Classical -> Unit of behaviour (function)
 ** London -> Object
 * Quick
 * Isolated
@@ -67,8 +67,9 @@ Unit test::
 Classical and London differ on Isolation.
 
 * Classical -> Isolate the test
-** Can run tests in parallel
+** Run tests in parallel
 * London -> Isolate the implementation 
+** Test covers specific component
 
 == Naming
 

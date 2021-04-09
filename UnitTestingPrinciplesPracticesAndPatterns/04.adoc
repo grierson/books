@@ -17,8 +17,8 @@ Needed to maintain growth of project.
 Use classical style testing
 
 London style leads to
-* Lose intrest/confidence it tests
+* Loss of intrest/confidence it tests
 *** Can't refactor code without breaking tests
-*** So you lose confidence in tests
+*** Lose confidence in tests
 **** So you don't run your tests
 **** So you don't refactor
