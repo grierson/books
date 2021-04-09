@@ -9,14 +9,18 @@
 
 Needed to maintain growth of project.
 
-* Amount of code being executed within test
-* Complexity of code (Domain logic > boiler plate)
-** More tests for domain logic than boiler plate
+* Making sure you don't break old stuff
+* More LOC = More Bugs
+* Test Domain logic more as it's more valuable
+** Waste of time testing getters and setters
 
 == Resistance to refactor
 Use classical style testing
 
-London style leads to
+False positive :: 
+Test fails even though implementation is correct
+
+London style leads to false positives
 * Loss of intrest/confidence it tests
 *** Can't refactor code without breaking tests
 *** Lose confidence in tests
