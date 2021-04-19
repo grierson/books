@@ -1,4 +1,5 @@
-import { statement } from "./orginal";
+import { statement as ostatement } from "./orginal";
+import { statement as rstatement } from "./refactor";
 
 const plays = {
   hamlet: { name: "Hamlet", type: "tragedy" },
@@ -31,7 +32,12 @@ const output = `Statement for BigCo
 Amount owed is $1,730.00
 You earned 47 credits`;
 
-test("expected output", () => {
-  var result = statement(invoice, plays);
+test("orginal expected output", () => {
+  var result = ostatement(invoice, plays);
+  expect(result.trim()).toBe(output);
+});
+
+test("refactored expected output", () => {
+  var result = rstatement(invoice, plays);
   expect(result.trim()).toBe(output);
 });
