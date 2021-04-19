@@ -12,22 +12,19 @@ export function statement(invoice, plays) {
   }).format;
 
   for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-
-    let thisAmount = amountFor(play, perf);
-
     // Add volume credits
     volumeCredits += Math.max(perf.audience - 30, 0);
 
     // Add extra credit for every ten comedy attendees
-    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if ("comedy" === playFor(plays, perf).type)
+      volumeCredits += Math.floor(perf.audience / 5);
 
     // Print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${
-      perf.audience
-    } seats)\n`;
+    result += ` ${playFor(plays, perf).name}: ${format(
+      amountFor(playFor(plays, perf), perf) / 100
+    )} (${perf.audience} seats)\n`;
 
-    totalAmount += thisAmount;
+    totalAmount += amountFor(playFor(plays, perf), perf);
   }
 
   result += `Amount owed is ${format(totalAmount / 100)}\n`;
@@ -37,15 +34,19 @@ export function statement(invoice, plays) {
   return result;
 }
 
-function amountFor(play, perf) {
+function playFor(plays, perf) {
+  return plays[perf.playID];
+}
+
+function amountFor(play, aPerformance) {
   let result = 0;
 
   switch (play.type) {
     case "tragedy":
       result = 40000;
 
-      if (perf.audience > 30) {
-        result += 1000 * (perf.audience - 30);
+      if (aPerformance.audience > 30) {
+        result += 1000 * (aPerformance.audience - 30);
       }
 
       break;
@@ -53,11 +54,11 @@ function amountFor(play, perf) {
     case "comedy":
       result = 30000;
 
-      if (perf.audience > 20) {
-        result += 10000 + 500 * (perf.audience - 20);
+      if (aPerformance.audience > 20) {
+        result += 10000 + 500 * (aPerformance.audience - 20);
       }
 
-      result += 300 * perf.audience;
+      result += 300 * aPerformance.audience;
 
       break;
 
