@@ -1,7 +1,9 @@
 = Refactoring
 
-`When you have to add a feature to a program put the code is not structured in a convenient way, first refactor the grogram to make it easy to add the feature, then add the feature`
+`When you have to add a feature to a program but the code is not structured in a convenient way, first refactor the grogram to make it easy to add the feature, then add the feature`
 
-== Steps
+== Refactoring Steps
 . MAKE SURE YOU HAVE TESTS
 .. So you don't break anything
+. Break things down
+.. Divide and conquer

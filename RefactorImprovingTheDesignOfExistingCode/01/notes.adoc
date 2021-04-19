@@ -1,0 +1,7 @@
+= Steps
+
+== Decompose `statement` function
+
+As the statement function is huge we need to break it apart. First thing to do is to break function into chunks based on behaviors.
+
+=== Switch statement jumps out first
