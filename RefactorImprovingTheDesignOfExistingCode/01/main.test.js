@@ -1,6 +1,12 @@
-import { statement } from "./main.js";
+import { statement } from "./orginal";
 
-var invoice = {
+const plays = {
+  hamlet: { name: "Hamlet", type: "tragedy" },
+  "as-like": { name: "As You Like It", type: "comedy" },
+  othello: { name: "Othello", type: "tragedy" },
+};
+
+const invoice = {
   customer: "BigCo",
   performances: [
     {
@@ -26,6 +32,6 @@ Amount owed is $1,730.00
 You earned 47 credits`;
 
 test("expected output", () => {
-  var result = statement(invoice);
+  var result = statement(invoice, plays);
   expect(result.trim()).toBe(output);
 });
