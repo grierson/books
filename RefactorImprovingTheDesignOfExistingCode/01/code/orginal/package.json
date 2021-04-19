@@ -21,7 +21,6 @@
     "prettier": "^2.2.1"
   },
   "scripts": {
-    "code": "node --experimental-json-modules main.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   }
 }
