@@ -9,21 +9,21 @@ export function statement(invoice, plays) {
     volumeCredits += volumeCreditsFor(perf, play);
 
     // Print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${
+    result += ` ${play.name}: ${usd(thisAmount / 100)} (${
       perf.audience
     } seats)\n`;
 
     totalAmount += thisAmount;
   }
 
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `Amount owed is ${usd(totalAmount / 100)}\n`;
 
   result += `You earned ${volumeCredits} credits\n`;
 
   return result;
 }
 
-function format(number) {
+function usd(number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

@@ -8,3 +8,13 @@ Use `Extract function` to break processes apart.
 == Remove play (Replace Temp with Query)
 
 ? Local scope names complicate extractions
+
+== ? Inline variable
+
+Not sure
+
+== Change Function Declaration (Rename function)
+
+Rename a function so it makes more sense.
+
+== Split loop
