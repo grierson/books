@@ -13,8 +13,12 @@ Use `Extract function` to break processes apart.
 
 Not sure
 
-== Change Function Declaration (Rename function)
+== Change Function Declaration (Rename function so it's meaningful)
 
 Rename a function so it makes more sense.
 
-== Split loop
+== Split loop (SRP for loops)
+
+Split loop into separate responsibility
+
+== Slide Slide Statements (Group related stuff)

@@ -1,25 +1,35 @@
 export function statement(invoice, plays) {
-  let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
     const play = playFor(plays, perf);
-    let thisAmount = amountFor(play, perf);
-    volumeCredits += volumeCreditsFor(perf, play);
-
-    // Print line for this order
-    result += ` ${play.name}: ${usd(thisAmount / 100)} (${
+    result += ` ${play.name}: ${usd(amountFor(play, perf) / 100)} (${
       perf.audience
     } seats)\n`;
-
-    totalAmount += thisAmount;
   }
 
-  result += `Amount owed is ${usd(totalAmount / 100)}\n`;
+  result += `Amount owed is ${usd(totalAmount(invoice, plays) / 100)}\n`;
 
-  result += `You earned ${volumeCredits} credits\n`;
+  result += `You earned ${totalVolumeCredits(invoice, plays)} credits\n`;
 
+  return result;
+}
+
+function totalAmount(invoice, plays) {
+  let result = 0;
+  for (let perf of invoice.performances) {
+    const play = playFor(plays, perf);
+    result += amountFor(play, perf);
+  }
+  return result;
+}
+
+function totalVolumeCredits(invoice, plays) {
+  let result = 0;
+  for (let perf of invoice.performances) {
+    const play = playFor(plays, perf);
+    result += volumeCreditsFor(perf, play);
+  }
   return result;
 }
 
