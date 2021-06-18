@@ -32,10 +32,10 @@ const output = `Statement for BigCo
 Amount owed is $1,730.00
 You earned 47 credits`;
 
-test("orginal expected output", () => {
-  var result = ostatement(invoice, plays);
-  expect(result.trim()).toBe(output);
-});
+// test("orginal expected output", () => {
+//   var result = ostatement(invoice, plays);
+//   expect(result.trim()).toBe(output);
+// });
 
 test("refactored expected output", () => {
   var result = rstatement(invoice, plays);
