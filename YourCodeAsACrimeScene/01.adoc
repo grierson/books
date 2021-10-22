@@ -1,0 +1,16 @@
+= Chapter 1
+
+Spend most time/money/effort with code maintenance because development is a learning experience. (40-80% project cost) for example.
+
+* Users suggest improvements (Integrating new features)
+* Growth of product (Scale/performance)
+* Working with problematic code (Oversight of implementation)
+
+So being able to understand codebase is most important. So we need to
+
+* Find code with most defects
+* Find code that matters most for evolution
+* Find code with steepest learning curve
+* How team influence code base
+* Track organisational problems
+* Leave trace of our changes for future maintenance
