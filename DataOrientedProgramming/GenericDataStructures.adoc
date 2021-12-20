@@ -15,6 +15,7 @@ Benefits
 == Flexible data model
 
 If we wanted to add a Fullname property to the data
+
 * Static OOP -> Create new class AuthorWithFullname
 * Dynamic FP -> `(assoc author :fullname "Alice Wonderland")` 
 

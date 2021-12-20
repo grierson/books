@@ -1,0 +1,94 @@
+= Represent data with Generic Data structures
+
+== Flexible data model
+
+[source,javascript]
+----
+var watchmen = {
+    "isbn": "978-1779501127",
+    "title": "Watchmen",
+    "publicationYear": 1987,
+    "authors": ["alan-moore", "dave-gibbons"],
+    "bookItems": [
+        {
+            "id": "book-item-1",
+            "libId": "nyc-central-lib",
+            "isLent": true
+        },
+        {
+            "id": "book-item-2",
+            "libId": "nyc-central-lib",
+            "isLent": false
+        }
+    ]
+}
+
+var catalog = {
+    "authorsById": {
+        "alan-moore": {
+            "name": "Alan Moore",
+            "age": 21
+        },
+        "dave-gibbons": {
+            "name": "Dave Gibbons",
+            "age": 49
+        }
+    }
+}
+----
+
+=== Only list some data
+
+Need to display information about the book in search results list.
+In that case, instead of author IDs, you want to display author names, and you don’t need the book item information.
+How would you handle that?
+
+==== Static OOP
+
+You would have to create new class something like `AuthorWithBookDetails` (Is that even a good name?)
+
+[source,csharp]
+----
+class AuthorWithBookDetails
+{
+    string Isbn
+    string Title
+    int PublicationYear
+    List<string> Authors
+
+    public AuthorWithBookDetails(string isbn, string title, int year, List<string> authors){
+        Isbn = isbn;
+        Title = ....
+    }
+}
+----
+
+==== Dynamic Functional
+
+You can just create a new data structure easily without have to define it all up front.
+
+[source,clojure]
+----
+(defn getAuthorNames [db {:keys [authorsIds]}]
+    (map (fn [authorId] (get-in db [:authorsById authorId, :name])) authorsIds))
+
+(defn getBookInfo [db {:keys [title isbn]}]
+  {:title title
+   :isbn isbn
+   :authors (getAuthorsNames db)})
+----
+
+== Feature fields
+
+[source,clojure]
+----
+(defn vip? [db email]
+  (get-in db [:memebersByEmail email :vip?]))
+
+(defn super? [db email]
+  (get-in db [:memebersByEmail email :super?]))
+
+----
+
+
+
