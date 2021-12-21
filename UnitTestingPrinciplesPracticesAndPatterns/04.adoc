@@ -9,20 +9,14 @@
 
 Needed to maintain growth of project.
 
-* Making sure you don't break old stuff
-* More LOC = More Bugs
+* Making sure you don't break old stuff when making changes
 * Test Domain logic more as it's more valuable
 ** Waste of time testing getters and setters
 
 == Resistance to refactor
-Use classical style testing
+Use classical style testing as only testing the output and not concerned with the implementation so the implementation should be able to change and not break the tests
 
 False positive :: 
 Test fails even though implementation is correct
 
-London style leads to false positives
-* Loss of intrest/confidence it tests
-*** Can't refactor code without breaking tests
-*** Lose confidence in tests
-**** So you don't run your tests
-**** So you don't refactor
+London style leads to false positives as you have to fix the tests as you refactor as you are testing the implementation which leads to Loss of interest/confidence it tests so that you end up not run your tests or refactoring

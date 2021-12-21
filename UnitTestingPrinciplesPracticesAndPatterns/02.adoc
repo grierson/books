@@ -2,21 +2,19 @@
 
 == Glossary
 
-Classical (Black box, Bottom up)::
-Testing the output.
-Less brittle as not testing how only the output.
-* (add 5 5) => 10 'Don't care how it works just as long as it gives me the correct results'
+Classical (Chicago, Black box, Bottom up)::
+Less brittle as only testing the output not the implementation.
+* `(add 5 5) => 10` We don't care how it works just as long as it gives me the correct results
 
 London (Mockist, Top down)::
-Testing the implementation.
-Test that internal implementation is called and stub output.
-* Growing Object Oriented Software guided by Tests
+Testing the internal implementation by mocking all collaborators
+* Growing Object-Oriented Software guided by Tests
 
 Shared dependency::
-Mutable state shared across tests.
-If state changes then tests will become unpredictable because of race conditions. 
+Mutable state shared across tests
 
-If first test swap's then then second fact runs it would fail.
+== Avoid shared dependency
+The order of the execution matters when sharing mutable state across tests which can cause race conditions with the tests making them flaky
 
 [source,clojure]
 ----
@@ -38,47 +36,26 @@ Unit test::
 * Verifies small piece of code.
 ** Classical -> Unit of behaviour (function)
 ** London -> Object
-* Quick
+* Quick (Should run instantly)
 * Isolated
-** Classical -> From other tests
-** London -> Object
+** Classical -> Isolate the test
+*** Run tests in parallel (Faster running test suite)
+** London -> Isolate the implementation
+*** Test covers specific component (If test fails you know what exactly is failing)
 
 [source,clojure]
 ----
 (fact "classical"
-  (let [store (->Store)
-        product "shampoo"
+  (let [product "shampoo"
+        store (->Store)
         _ (stock store product 10)
-        customer (->Customer)
-        _ (purchase customer store product 5)]
+        _ (purchase (->Customer) store product 5)]
     (getInventory store product) => 5))
 
 (fact "london"
   (let [product "shampoo"
         storeMock (reify IStore (in-stock? [product] true))
         _ (stock storeMock product 10)
-        customer (->Customer)
-        _ (purchase customer store product 5)]
+        _ (purchase (->Customer) store product 5)]
     (called stockMock RemoveInventory) => 1))
 ----
-
-== Isolation
-
-Classical and London differ on Isolation.
-
-* Classical -> Isolate the test
-** Run tests in parallel
-* London -> Isolate the implementation 
-** Test covers specific component
-
-== Naming
-
-Describe tests for Domain expert or Business analyst.
-
-NOTE: 'should be' is an anti-pattern use 'is'
-
-* Good
-** Delivery with a past date is invalid
-
-* Bad
-** DeliveryManager_Delivery_Invalid_Date
