@@ -8,15 +8,12 @@
 ** Technical capability
 *** When many microservices need the same technical capability. (Auth, Alert)
 * Can be deployed on its own, independently
-** Can deploy a single service (business capability) without impacting others
 ** Whereas with monolith you have to deploy the entire system again
-* Consists of 1 or many capabilities
-* Runs in its own separate process
 * Has its own dedicated data store
 ** Doesn't directly access another microservice datastore
 * Collaborates with other microservices to complete its own action
 * A small team can maintain a few handfuls of microservices
-* A microservice is replaceable (Rewrite in 2 weeks)
+* A microservice is replaceable (Rewrite in ~2 weeks)
 
 == Communication between Microservices
 * Queues
