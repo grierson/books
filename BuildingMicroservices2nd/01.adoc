@@ -1,0 +1,60 @@
+= Chapter 1
+Kyle Grierson<griersonky@gmail.com>
+1.0, January 13, 2022
+:toc:
+
+== What is a microservice
+
+* Independently deployable services that are modeled around a business domain
+** Encapsulates functionality and that are accessible to other services via a network
+* Should have small external interfaces that rarely changes
+** So implementation can change freely
+** Consumers don't break
+* Architecture
+** Hexagonal/Ports and adapters/Onion/Clean
+** Middle pure business logic
+** Outside interfaces (APIS)
+
+== Key concepts
+
+* Independently deployable
+** (Loosely coupled) Can release new/updated service without deploying other services
+** Need explicit/strong/well-defined/stables contracts/interfaces between services to prevent breaking changes
+* Modelled around a Business domain (DDD)
+** Rolling out feature that requires changes to many services is costly
+*** Need to coordinate the releases
+* Prioritises high cohesion of business functionality over technical functionality
+** Cohesion often refers to how the elements of a module belong together
+
+* Don't share database
+** If services share a database then they become coupled and changes need to coordinated between the two
+
+* Size
+** "Should be as big as your head" (What you find easily understood)
+** As small an interface as possible
+
+== Why
+
+* Composability
+** As services are small and focused they can be used in different business processes
+* Scaling
+** Can scale different parts of your infrastructure À la carte
+*** Need 10 instances of `picture service` but only 2 of the `profile service`
+
+== Essentials
+
+* Log aggregation tool
+** Collect and aggregates logs from all services
+** Humio, Datadog
+* Trace
+** Jaeger, Lightstep, Honeycomb
+
+== Takeaways
+
+* Pros
+** Scaling, can spin up more instances for a particular service
+** 1 service can fail but entire system keeps running
+* Cons
+** Managing loads of services
+** Deploying loads of services
+** Learn loads of new tools for managing microservices
