@@ -35,13 +35,57 @@ Kyle Grierson<griersonky@gmail.com>
 
 == Why
 
-* Composability
-** As services are small and focused they can be used in different business processes
-* Scaling
-** Can scale different parts of your infrastructure À la carte
-*** Need 10 instances of `picture service` but only 2 of the `profile service`
+=== Composability
 
-== Essentials
+Business wants to reuse `user-profile` implementation for a different project
+
+==== Mono
+
+Reuse entire project just to use the user profile implementation
+
+==== Micro
+
+As services are small and focused they can be used in different business processes (Just tag users with new service label)
+
+=== Scaling
+
+`picture` feature of service is high in demand
+
+==== Mono
+
+Have to start up X more instances of your entire application just to support picture demand (Costly on cloud hosts)
+
+==== Micro
+
+Can scale different parts of your infrastructure À la carte.
+Just start X more `picture services`
+
+=== Smaller (Able to use new technology)
+
+New (library/version of currently used library) comes out with new cool features that would be beneficial
+
+==== Mono
+
+Stuck with previous technology choices/versions, so you have to live with when adding new features or update entire system which may cause breaking changes
+
+==== Micro
+
+* Can leave old services on older tech and use newer services can use latest tech
+* Services are small so can be easily rewritten/updated with new tech
+
+=== Fault tolerant
+
+System crashes because of new `picture` feature
+
+==== Mono
+
+Entire system down
+
+==== Micro
+
+Users can use rest of system just `picture` feature will be unavailable
+
+== Essential tool
 
 * Log aggregation tool
 ** Collect and aggregates logs from all services
