@@ -1,0 +1,20 @@
+= Episode 1
+
+You have 2 brain modes
+
+1. Mode 1 (Is a lazy monkey, Give quick but lazy answers)
+2. Mode 2 (Analytical and Deduction, Slow but thinks about answer)
+
+== Examples
+
+[quote]
+A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?
+
+. Quick lazy monkey brain: $1.00
+. $1.05. As the bat costs $1 more than the ball
+
+[quote]
+How many of each species did Moses take on the ark with him?
+
+. Quick lazy monkey brain: 2
+. None, Noah put them on the Arc
