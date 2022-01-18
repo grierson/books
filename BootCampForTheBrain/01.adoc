@@ -3,7 +3,7 @@
 You have 2 brain modes
 
 1. Mode 1 (Fast - Monkey - Gives quick but lazy/illogical answers)
-2. Mode 2 (Slow - Sherlock Holmes - Uses analysis and deduction, but you have to make it work)
+2. Mode 2 (Slow and Lazy - Sherlock Holmes - Uses analysis and deduction, but you have to make it work)
 
 == Examples
 

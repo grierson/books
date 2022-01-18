@@ -2,16 +2,78 @@
 
 Your brain can easily be tricked with how things are presented.
 
-* Priming/Forcing
-** Influencing your thoughts
-** Magician making someone pick a card
+== Priming/Forcing
 
-* Pick things by easy
-** 4 cards in a row
-*** Right hand Likely to pick 3rd from right
-*** Left hand Likely to pick 3rd from left
-** Random number from 1 - 10
-*** Likely to be 7
+* Influencing your thoughts
+* Magician making someone pick a card
 
-* Decoy product
-** Middle option which is inferior to expensive product to make it look more appealing
+== Ease
+
+Mode 1 likes ease and familiarity
+
+== Examples
+
+* 4 cards in a row
+** Right hand Likely to pick 3rd from right
+** Left hand Likely to pick 3rd from left
+* Random number from 1 to 10
+** Likely to be 7
+* More like to buy products at eye level in stores
+
+=== Familiarity
+
+* More likey to marry someone with similar sounding name or same initials
+* Enter location/career path with similar sound to your name
+** Lots of Dennis/Denise who are dentists
+** Louie in St.Louis
+
+=== Bright colours
+
+* Look at images and bright colors
+* Easy to process
+
+== Choice architecture (How information is presented)
+
+Mode 1 makes stories to make it's self happy with the information available.
+Doesn't have to accurate or rational
+
+=== Shop discount and distance
+
+* Shop near has watch for $50 but a shop 15 mins away has the watch for $25 a (50% saving).
+You make the journey
+
+* Shop near has laptop $1000 but however the shop 15 mins away has laptop but with only 2.5% saving.
+You're not likey to make the journey.
+Even though it's the same amount of saving.
+It's either worth traveling for $25 or not
+
+=== Branding
+
+* Yogurt
+** 75% fat free yogurt - Good
+** 25% fat yogurt - Bad
+* Medicine for life-threatening disease
+** Saves 90% of people who took it
+** 10% died you took it
+
+=== For good
+
+* Etching fly on a urinal reduces spillage by 80%
+* Trees planted on side of road gives the illusion of going faster so drivers slow down
+* Using Smiley/Unhappy emojis for speed cameras
+** Mode 1 relates to emotions better than future penalty charges
+
+== Decoy product (Asymmetrically dominate)
+
+Middle option which is inferior to expensive product to make it look more appealing
+
+=== Popcorn
+
+Small bag for $3 and Big bag for $7. People pick the small bag because that's what they wanted.
+By adding a 'Decoy' a middle option ($6.50 for a medium bag) You are more likey to buy the Big bag now as it looks like a much better deal in comparison to the Decoy.
+
+== Prevention
+
+* List your requirements prior
+** Only buy something if you actually need it
+* Look out for Decoys
