@@ -1,12 +1,11 @@
 = Chapter 1
 Kyle Grierson<griersonky@gmail.com>
-1.0, January 13, 2022
 :toc:
 
 == What is a microservice
 
 * Independently deployable services that are modeled around a business domain
-** Encapsulates functionality and that are accessible to other services via a network
+** Encapsulates functionality and that are accessible via a network
 * Should have small external interfaces that rarely changes
 ** So implementation can change freely
 ** Consumers don't break
@@ -39,39 +38,46 @@ Kyle Grierson<griersonky@gmail.com>
 
 Business wants to reuse `user-profile` implementation for a different project
 
-==== Mono
+|===
+| Mono | Micro
 
-Reuse entire project just to use the user profile implementation
-
-==== Micro
-
-As services are small and focused they can be used in different business processes (Just tag users with new service label)
+| Reuse entire project just to use the user profile implementation
+| As services are small and focused they can be used in different business processes (Just tag users with new service label)
+|===
 
 === Scaling
 
 `picture` feature of service is high in demand
 
-==== Mono
+|===
+| Mono | Micro
 
-Have to start up X more instances of your entire application just to support picture demand (Costly on cloud hosts)
+| Have to start up X more instances of your entire application just to support picture demand (Costly on cloud hosts)
 
-==== Micro
-
+a|
 Can scale different parts of your infrastructure À la carte.
 Just start X more `picture services`
+|===
 
 === Smaller (Able to use new technology)
 
 New (library/version of currently used library) comes out with new cool features that would be beneficial
 
-==== Mono
+|===
+| Mono | Micro
 
-Stuck with previous technology choices/versions, so you have to live with when adding new features or update entire system which may cause breaking changes
+a| Stuck with previous technology choices/versions, so you have to live with when adding new features or update entire system which may cause breaking changes
 
-==== Micro
-
+a|
 * Can leave old services on older tech and use newer services can use latest tech
 * Services are small so can be easily rewritten/updated with new tech
+|===
+
+==== Example
+
+Khan academy migrating from a Python 2 monolith to Go microservices as Python 2 is end of life.
+If they were using microservices when Python 2 was announced to be end of life back in 2008 with an end of life in 2015. They could've started using a different language for future services and slowly migrate older services to a newer language.
+https://blog.khanacademy.org/go-services-one-goliath-project/[Khan blog post about migration]
 
 === Fault tolerant
 
