@@ -1,1 +1,27 @@
 = Chapter 2 - Model Microservices
+
+"A structure is table if cohesion isstring and coupling is low"
+
+== Glossary
+
+Information hiding (Encapsulation)::
+Expose as little implementation details through your api.
+The connections between services are assumptions which the services make about each other.
+
+Cohesion - relationship of topics within a microservice ::
+The code that changes together, stays together.
+Gather together the things that change for the same reasons.
+Separate those things that change for different reasons.
+
+Coupling - relationship with other microservices ::
+Loosely coupled changes to one service should not **require** changes to another.
+I can add new features to one service, but I can optionally choose to update another service to use that new feature but I'm not required.
+
+== Desired design
+
+* Services can be created in parallel as communicate via interfaces and not concerned with implementation details of other services.
+* Smaller and easier to comprehend.
+Only looking at a smaller sub set of problem domain
+* Flexibility
+** Services can be changed independently
+** Services can be combined in different ways for different future business requirements
