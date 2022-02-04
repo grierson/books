@@ -45,6 +45,15 @@ Business wants to reuse `user-profile` implementation for a different project
 | As services are small and focused they can be used in different business processes (Just tag users with new service label)
 |===
 
+[source,mermaid]
+----
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+----
+
 [plantuml]
 ----
 @startuml

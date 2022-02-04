@@ -15,7 +15,7 @@ Separate those things that change for different reasons.
 
 Coupling - relationship with other microservices ::
 Loosely coupled changes to one service should not **require** changes to another.
-I can add new features to one service, but I can optionally choose to update another service to use that new feature but I'm not required.
+I can add new features to one service, but I can optionally choose to update another service to use that new feature, but I'm not required too.
 
 == Desired design
 
@@ -25,3 +25,170 @@ Only looking at a smaller sub set of problem domain
 * Flexibility
 ** Services can be changed independently
 ** Services can be combined in different ways for different future business requirements
+
+== Coupling
+
+.Loose coupling -> tight coupling
+[graphviz]
+----
+graph name {
+    rankdir="LR"
+    Domain --  "Pass-through" -- Common -- Content
+}
+----
+
+=== Domain coupling
+
+`Order processor` is coupled to `Warehouse` and `Payment` to operate which is unavoidable.
+
+WARNING: If a service is coupled to many services then it's a sign that it's doing too much.
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Payment
+
+Order --> Warehouse : Reserve stock
+Order --> Payment : Take payment
+@enduml
+----
+
+IMPORTANT: Encapsulation is important.
+Only expose what you need to
+
+=== Pass-through
+
+`Order processor` is including data for `Shipping` because it *knows* `Warehouse` calls `Shipping`
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order --> Warehouse : Send order request\n(Contains Shipping manifest)
+Warehouse --> Shipping : Take payment
+@enduml
+----
+
+One option is to bypass the middle man (`warehouse`).
+However, this now means `Order processing` as to
+
+. Have domain coupling with `Shipping`
+. Manage `reserving` and `removing` stock from the warehouse
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order -> Warehouse : (1) Reserve stock
+Order -> Shipping : (2) Shipping manifest
+Order --> Warehouse : (3) Remove stock
+@enduml
+----
+
+Another option is to have `Warehouse` create the `Shipping manifest`.
+However `Order processor` would have to be updated if `Warehouse` required more data to generate the `Shipping manifest`
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order --> Warehouse : Send order request\n(Contains data needed to create a Shipping manifest)
+Warehouse --> Shipping : Dispatch package request\n w\Generated Shipping manifest
+@enduml
+----
+
+A final option is to use `hypermedia links`. `Warehouse` knows nothing about the structure of the `Shipping manifest`.
+It just passes the `link` to the data on to the `Shipping`.
+If `Shipping` requires the data in a different format then we only need to update `Order` (Producer) and `Shipping` (Consumer)
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order --> Warehouse : Send order request\n(Contains Shipping manifest link)
+Warehouse --> Shipping : Take payment
+Shipping --> Order : Get shipping manifest
+@enduml
+----
+
+=== Common Coupling
+
+Problem can occur if multiple services share a database
+
+[plantuml]
+----
+@startuml
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+database Country
+
+Order --> Country
+Warehouse --> Country
+@enduml
+----
+
+The state machine below shows the transitions that an order should go through.
+However, if multiple services are updating the state they need to be coordinated to ensure no bad states occur.
+
+.State transitions for an order
+[plantuml]
+----
+@startuml
+left to right direction
+hide empty description
+
+[*] --> PLACED
+PLACED --> PAID
+PLACED --> CANCELED
+PAID --> PICKING
+PAID --> CANCELED
+PICKING --> CANCELED
+PICKING --> SHIPPED
+@enduml
+----
+
+One solution is to create a coordinator 'Order service' who can accept/reject requests to update the state.
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon OrderProc as "Order Processor service"
+hexagon Warehouse as "Warehouse service"
+file "Order microservice" #line.dashed; {
+    hexagon Order as "Order service"
+    database OrderDB as "Order table"
+}
+
+Order --> OrderDB
+
+OrderProc --> Order : PLACED || PAID requests
+Warehouse --> Order : PICKING || SHIPPED requests
+@enduml
+----
