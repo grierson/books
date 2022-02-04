@@ -8,7 +8,7 @@ Information hiding (Encapsulation)::
 Expose as little implementation details through your api.
 The connections between services are assumptions which the services make about each other.
 
-Cohesion - relationship of topics within a microservice ::
+Cohesion - relationship of things within a microservice ::
 The code that changes together, stays together.
 Gather together the things that change for the same reasons.
 Separate those things that change for different reasons.

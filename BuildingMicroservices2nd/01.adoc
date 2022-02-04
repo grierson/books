@@ -45,6 +45,18 @@ Business wants to reuse `user-profile` implementation for a different project
 | As services are small and focused they can be used in different business processes (Just tag users with new service label)
 |===
 
+[plantuml]
+----
+@startuml
+rectangle A as "Capability A"
+rectangle B as "Capability B"
+hexagon service
+
+A -> service
+service <- B
+@enduml
+----
+
 === Scaling
 
 `picture` feature of service is high in demand
@@ -52,11 +64,53 @@ Business wants to reuse `user-profile` implementation for a different project
 |===
 | Mono | Micro
 
-| Have to start up X more instances of your entire application just to support picture demand (Costly on cloud hosts)
+a| Have to start up X more instances of your entire application just to support picture demand (Costly on cloud hosts)
+
+[plantuml]
+----
+@startuml
+title Deploy multiple monolith's just to scale "picture" capability
+
+left to right direction
+node monolith1 as "Monolith 1"
+node monolith2 as "Monolith 2"
+rectangle extras as "Scale up and down" {
+    node monolith3 as "Monolith 3" #lightgrey
+    node monolithn as "Monolith N" #lightgrey
+}
+node lb as "Load balancer"
+
+lb --> monolith1
+lb --> monolith2
+lb --> monolith3
+lb --> monolithn
+@enduml
+----
 
 a|
 Can scale different parts of your infrastructure À la carte.
 Just start X more `picture services`
+
+[plantuml]
+----
+@startuml
+title Only deploy picture service instances
+
+left to right direction
+hexagon picture1 as "Picture 1"
+hexagon picture2 as "Picture 2"
+rectangle extras as "Scale up and down" {
+    hexagon picture3 as "Picture 3" #lightgrey
+    hexagon picturen as "Picture N" #lightgrey
+}
+node lb as "Load balancer"
+
+lb --> picture1
+lb --> picture2
+lb --> picture3
+lb --> picturen
+@enduml
+----
 |===
 
 === Smaller (Able to use new technology)
@@ -66,11 +120,46 @@ New (library/version of currently used library) comes out with new cool features
 |===
 | Mono | Micro
 
-a| Stuck with previous technology choices/versions, so you have to live with when adding new features or update entire system which may cause breaking changes
+a|
+Stuck with previous technology choices/versions, so you have to live with when adding new features or update entire system which may cause breaking changes
+[plantuml]
+----
+@startuml
+title Complete re-write
+
+node s1 as "Monolith (Python 2)"
+node s2 as "Monolith (Python 3)"
+cloud months as "Months of development"
+
+s1 --> months
+months -> s2
+@enduml
+----
 
 a|
 * Can leave old services on older tech and use newer services can use latest tech
 * Services are small so can be easily rewritten/updated with new tech
+
+[plantuml]
+----
+@startuml
+title Update incrementally
+
+left to right direction
+
+hexagon s1 as "User (Python 2)" #pink;line:red
+rectangle replacement as "Toggle implementations" {
+    hexagon s2 as "Cart (Python 2)" #lightgrey
+    hexagon s2n as "Cart (Python 3)" #orange;line:black;
+}
+hexagon s3 as "Basket (Python 3)" #palegreen
+agent Website
+
+Website <-r- s1
+Website <- replacement
+Website <-l- s3
+@enduml
+----
 |===
 
 ==== Example
@@ -83,13 +172,39 @@ https://blog.khanacademy.org/go-services-one-goliath-project/[Khan blog post abo
 
 System crashes because of new `picture` feature
 
-==== Mono
+|===
+| Mono | Micro
 
-Entire system down
+a| Entire system down
+[plantuml]
+----
+@startuml
+title Entire system down
 
-==== Micro
+node Monolith #pink;line:red
+@enduml
+----
 
-Users can use rest of system just `picture` feature will be unavailable
+a| Users can use rest of system just `picture` feature will be unavailable
+[plantuml]
+----
+@startuml
+title Account service is down but users can still search
+
+left to right direction
+
+hexagon Catalog #palegreen
+hexagon Account #pink;line:red
+hexagon Basket #palegreen
+
+agent Website
+
+Website <- Catalog
+Website <-- Account
+Website <-- Basket
+@enduml
+----
+|===
 
 == Essential tool
 
@@ -103,6 +218,7 @@ Users can use rest of system just `picture` feature will be unavailable
 
 * Pros
 ** Scaling, can spin up more instances for a particular service
+** Upgradable, can quickly and easily start migrating to new tech
 ** 1 service can fail but entire system keeps running
 * Cons
 ** Managing loads of services
