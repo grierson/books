@@ -68,55 +68,54 @@ service <- B
 
 === Scaling
 
-`picture` feature of service is high in demand
-
+`picture` feature of website is in high demand, so you need more servers running your `picture` capability.
+With monoliths you have to deploy your entire app even-though you only want to scale the `picture` capability, which comes at a higher running cost as you are paying for resources that you don't need.
+Whereas with microscervices you're only paying for what you need.
 |===
 | Mono | Micro
 
-a| Have to start up X more instances of your entire application just to support picture demand (Costly on cloud hosts)
-
+a|
 [plantuml]
 ----
 @startuml
-title Deploy multiple monolith's just to scale "picture" capability
-
+title Deploy more monoliths only to scale "picture" capability
 left to right direction
-node monolith1 as "Monolith 1"
-node monolith2 as "Monolith 2"
-rectangle extras as "Scale up and down" {
-    node monolith3 as "Monolith 3" #lightgrey
-    node monolithn as "Monolith N" #lightgrey
-}
-node lb as "Load balancer"
 
-lb --> monolith1
-lb --> monolith2
-lb --> monolith3
-lb --> monolithn
+frame instance1 as "Instance 1" {
+    rectangle picture1 as "picture module"
+    rectangle cart1 as "Cart module"
+    rectangle catalog1 as "Catalog module"
+    rectangle foo1 as "Foo module"
+}
+
+frame instance2 as "Instance 2" #lightgrey {
+    rectangle picture2 as "picture module" #palegreen
+    rectangle cart2 as "Cart module" #lightcoral
+    rectangle catalog2 as "Catalog module" #lightcoral
+    rectangle foo2 as "Foo module" #lightcoral
+}
+
+rectangle lb as "Load balancer"
+
+lb --> instance1
+lb --> instance2
 @enduml
 ----
 
 a|
-Can scale different parts of your infrastructure À la carte.
-Just start X more `picture services`
-
 [plantuml]
 ----
 @startuml
-title Only deploy picture service instances
+title Deploy more picture services
 
 left to right direction
 hexagon picture1 as "Picture 1"
 hexagon picture2 as "Picture 2"
-rectangle extras as "Scale up and down" {
-    hexagon picture3 as "Picture 3" #lightgrey
-    hexagon picturen as "Picture N" #lightgrey
-}
-node lb as "Load balancer"
+hexagon picturen as "Picture N" #lightgrey
+rectangle lb as "Load balancer"
 
 lb --> picture1
 lb --> picture2
-lb --> picture3
 lb --> picturen
 @enduml
 ----
@@ -124,13 +123,13 @@ lb --> picturen
 
 === Smaller (Able to use new technology)
 
-New (library/version of currently used library) comes out with new cool features that would be beneficial
+New (library/version) comes out with new cool features that would be beneficial
 
 |===
 | Mono | Micro
 
 a|
-Stuck with previous technology choices/versions, so you have to live with when adding new features or update entire system which may cause breaking changes
+Stuck with previous technology choices/versions, so you have to live with when adding new features without upgrading or update entire system which may cause breaking changes
 [plantuml]
 ----
 @startuml
@@ -141,12 +140,12 @@ node s2 as "Monolith (Python 3)"
 cloud months as "Months of development"
 
 s1 --> months
-months -> s2
+months --> s2
 @enduml
 ----
 
 a|
-* Can leave old services on older tech and use newer services can use latest tech
+* Can leave old services on older tech and use newer tech on new services
 * Services are small so can be easily rewritten/updated with new tech
 
 [plantuml]
@@ -158,8 +157,8 @@ left to right direction
 
 hexagon s1 as "User (Python 2)" #pink;line:red
 rectangle replacement as "Toggle implementations" {
-    hexagon s2 as "Cart (Python 2)" #lightgrey
-    hexagon s2n as "Cart (Python 3)" #orange;line:black;
+    hexagon s2 as "Cart (Python 2)" #palegreen
+    hexagon s2n as "Cart (Python 3) (WIP)" #orange;line.dashed;
 }
 hexagon s3 as "Basket (Python 3)" #palegreen
 agent Website

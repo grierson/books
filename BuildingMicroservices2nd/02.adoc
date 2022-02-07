@@ -192,3 +192,6 @@ OrderProc --> Order : PLACED || PAID requests
 Warehouse --> Order : PICKING || SHIPPED requests
 @enduml
 ----
+
+=== Content coupling
+
