@@ -1,7 +1,7 @@
 #lang racket/base
 (require rackunit)
 
-(define (square x) (* x x)) 
+(define (square x) (* x x))
 (define (average x y) (/ (+ x y) 2))
 
 (define (sqrt x)
@@ -17,6 +17,6 @@
 
 
 ; Use block structure (functions nested in functions)
-; too hide implementation + lecical scoping (x used in nested fucntions)
+; too hide implementation + lexical scoping (x used in nested functions)
 
 (check-within (sqrt 4) 2 0.01 "sqrt of 4")

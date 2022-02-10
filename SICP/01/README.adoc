@@ -4,3 +4,28 @@
 image::recursive_tree.png[]
 
 > This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation.
+
+[plantuml]
+----
+digraph image {
+    "cc 100 5" -> {"cc 100 4" "cc 50 5"}
+    "cc 50 5" -> {"cc 50 4" "cc 0 5"}
+    "cc 0 5" -> 1
+    "cc 100 4" -> {"cc 100 3" "cc 50 4"}
+    "cc 100 3" -> {"cc 100 2"}
+    "cc 100 2" -> {"cc 100 1"}
+    "cc 100 1" -> {"cc 100 0"}
+    "cc 100 0" -> 0
+    "cc 50 4" -> {"cc 50 3", "cc 25 4"}
+    "cc 50 3" -> {"cc 50 2", "cc 40 3"}
+    "cc 50 2" -> {"cc 50 1", "cc 45 2"}
+    "cc 50 1" -> {"cc 50 0", "cc 49 1"}
+    "cc 50 0" -> 0
+    "cc 25 4" -> {"cc 25 3", "cc 0 4"}
+    "cc 0 4" -> 0
+    "cc 25 3" -> {"cc 25 2"}
+    "cc 25 2" -> {"cc 25 1"}
+    "cc 25 1" -> {"cc 25 0"}
+    "cc 25 0" -> 0
+}
+----

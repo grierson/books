@@ -1,8 +1,8 @@
 #lang racket
 
 (define (factorial-rec n)
-  (if (= n 1) 
-      1 
+  (if (= n 1)
+      1
       (* n (factorial-rec (- n 1)))))
 
 ; Eval
@@ -17,11 +17,11 @@
 ; (* 6 (* 5 (* 4 6)))
 ; (* 6 (* 5 24))
 ; (* 6 120)
-; 720 
+; 720
 
-(factorial 6)
+(factorial-rec 6)
 
-(define (factorial-iter n) 
+(define (factorial-iter n)
   (fact-iter 1 1 n))
 
 (define (fact-iter product counter max-count)

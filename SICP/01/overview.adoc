@@ -1,6 +1,0 @@
-= Chapter 1
-
-
-image::recursive_tree.png[]
-
-> This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation.
