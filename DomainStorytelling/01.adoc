@@ -1,0 +1,30 @@
+= Chapter 1
+
+
+[plantuml]
+----
+@startuml
+!global $LIB_BASE_LOCATION="https://raw.githubusercontent.com/tmorin/plantuml-libs/master/distribution"
+!include $LIB_BASE_LOCATION/bootstrap.puml
+include('domainstorytelling/bootstrap')
+
+Title("What is Domain Storytelling?","")
+
+include('domainstorytelling/Actor/User')
+include('fontawesome-5/Regular/CommentAlt')
+include('fontawesome-5/Regular/Image')
+
+User('domain_expert', "domain expert")
+User('developer', "developer")
+CommentAlt('domain_story_a', 'domain story')
+Image('domain_story_b', 'domain story')
+
+domain_expert -> domain_story_a : Activity("01", "tells")
+domain_story_a -> developer : Activity("", "to")
+
+developer --> domain_story_b : Activity("02", "draws")
+
+domain_expert -d-> domain_story_b : Activity("03", "reads and corrects")
+
+@enduml
+----
