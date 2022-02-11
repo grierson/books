@@ -2,35 +2,157 @@
 Kyle Grierson<griersonky@gmail.com>
 :toc:
 
-== What is a microservice
+== Glossary
 
-* Independently deployable services that are modeled around a business domain
-** Encapsulates functionality and that are accessible via a network
-* Should have small external interfaces that rarely changes
-** So implementation can change freely
-** Consumers don't break
-* Architecture
-** Hexagonal/Ports and adapters/Onion/Clean
-** Middle pure business logic
-** Outside interfaces (APIS)
+Coupling:: Dependencies
+
+Cohesion:: Grouping dependencies that change for the same reason
 
 == Key concepts
 
-* Independently deployable
-** (Loosely coupled) Can release new/updated service without deploying other services
-** Need explicit/strong/well-defined/stables contracts/interfaces between services to prevent breaking changes
-* Modelled around a Business domain (DDD)
-** Rolling out feature that requires changes to many services is costly
-*** Need to coordinate the releases
-* Prioritises high cohesion of business functionality over technical functionality
-** Cohesion often refers to how the elements of a module belong together
+It's all about managing coupling and cohesion
 
-* Don't share database
-** If services share a database then they become coupled and changes need to coordinated between the two
+=== Independently deployable
 
-* Size
+Must be able to make changes to a service without changing anything else so we need stable contracts between services
+
+==== Benefits
+
+|===
+| Diagram | Benefit
+
+a|
+[plantuml]
+----
+@startuml
+!define osaPuml https://raw.githubusercontent.com/Crashedmind/PlantUML-opensecurityarchitecture2-icons/master
+!include osaPuml/Common.puml
+!include osaPuml/User/all.puml
+
+title: Independent teams
+
+rectangle A as "Team A\n<$osa_user_large_group>" #lightcoral
+rectangle B as "Team B\n<$osa_user_large_group>" #palegreen
+rectangle C as "Team C\n<$osa_user_large_group>" #cornflowerblue
+hexagon serviceA as "Cart"
+hexagon serviceB as "Picture"
+hexagon serviceC as "User"
+
+A -D-> serviceA
+B -D-> serviceB
+C -D-> serviceC
+@enduml
+----
+
+a| Teams can work independently of one another
+
+* Specialise within subdomain
 ** "Should be as big as your head" (What you find easily understood)
-** As small an interface as possible
+* Build and deploy independently
+
+a|
+[plantuml]
+----
+@startuml
+title: Shared database
+
+rectangle monolitth {
+    hexagon serviceA as "Service A"
+    hexagon serviceB as "Service B"
+}
+
+@enduml
+----
+
+a| Service A adds
+
+a|
+[plantuml]
+----
+@startuml
+title: All services need to be updated
+
+hexagon serviceA as "Service A" #lightcoral
+hexagon serviceB as "Service B" #lightcoral
+database database as "New database"
+
+serviceA --> database
+serviceB --> database
+@enduml
+----
+|===
+
+==== Issues if services are not independently deployable
+
+If services are not modelled around a Business domain (DDD)
+
+* If a feature to spread across many services
+** Coordinate releases
+** Update in many places
+
+|===
+| Current | Situation | Problem
+
+a|
+[plantuml]
+----
+@startuml
+title: Shared database
+
+hexagon serviceA as "Service A"
+hexagon serviceB as "Service B"
+database database
+
+serviceA --> database
+serviceB --> database
+@enduml
+----
+
+a| Database schema is updated
+
+a|
+[plantuml]
+----
+@startuml
+title: All services need to be updated
+
+hexagon serviceA as "Service A" #lightcoral
+hexagon serviceB as "Service B" #lightcoral
+database database as "New database" #palegreen
+
+serviceA --> database
+serviceB --> database
+@enduml
+----
+
+a|
+[plantuml]
+----
+@startuml
+title: Basket changes
+
+hexagon Checkout
+hexagon Basket #palegreen
+
+Basket -> Checkout
+@enduml
+----
+
+a| Basket adds new feature which Checkout depends on
+
+a|
+[plantuml]
+----
+@startuml
+title: Checkout now needs to be updated
+
+hexagon Checkout #lightcoral
+hexagon Basket
+
+Basket -> Checkout
+@enduml
+----
+|===
 
 == Why
 
@@ -41,36 +163,42 @@ Business wants to reuse `user-profile` implementation for a different project
 |===
 | Mono | Micro
 
-| Reuse entire project just to use the user profile implementation
-| As services are small and focused they can be used in different business processes (Just tag users with new service label)
-|===
-
-[source,mermaid]
-----
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-----
-
+a|
 [plantuml]
 ----
 @startuml
-rectangle A as "Capability A"
-rectangle B as "Capability B"
-hexagon service
+title: You can't
 
-A -> service
-service <- B
+node monolith #lightcoral
+rectangle ProjectB as "Project B"
+
+ProjectB -[#red,dashed,thickness=5]-> monolith
+note on link
+    Project B can't
+end note
 @enduml
 ----
+
+a| As services are small and focused they can be used in different business processes
+[plantuml]
+----
+@startuml
+rectangle A as "Project A"
+rectangle B as "Project B"
+hexagon service
+
+A -R-> service
+service <-R- B
+@enduml
+----
+|===
 
 === Scaling
 
 `picture` feature of website is in high demand, so you need more servers running your `picture` capability.
 With monoliths you have to deploy your entire app even-though you only want to scale the `picture` capability, which comes at a higher running cost as you are paying for resources that you don't need.
 Whereas with microscervices you're only paying for what you need.
+
 |===
 | Mono | Micro
 
@@ -183,7 +311,7 @@ System crashes because of new `picture` feature
 |===
 | Mono | Micro
 
-a| Entire system down
+a|
 [plantuml]
 ----
 @startuml
@@ -193,7 +321,7 @@ node Monolith #pink;line:red
 @enduml
 ----
 
-a| Users can use rest of system just `picture` feature will be unavailable
+a|
 [plantuml]
 ----
 @startuml
