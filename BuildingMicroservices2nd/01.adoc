@@ -2,22 +2,58 @@
 Kyle Grierson<griersonky@gmail.com>
 :toc:
 
+++++
+<style>
+td.tableblock {
+    margin: 0;
+    padding: 0;
+}
+td.tableblock p {
+    padding: 0.5rem;
+}
+td.tableblock .bg-yellow p {
+    background-color: yellow;
+}
+td.tableblock .bg-green p {
+    background-color: lime;
+}
+td.tableblock .bg-pink p {
+    background-color: pink;
+}
+td.tableblock .bg-blue p {
+    background-color: RGB(96,197,241);
+}
+</style>
+++++
+
 == Glossary
 
-Coupling:: Dependencies
+Coupling:: Dependencies across boundaries
 
-Cohesion:: Grouping dependencies that change for the same reason
+Cohesion:: Dependencies within boundaries
 
-== Key concepts
+== It's all about High cohesion / Low coupling
 
-It's all about managing coupling and cohesion
+Cohesion and coupling are basically the same.
 
-=== Independently deployable
+[cols="^1a,^3a,^3a"]
+|===
+|      | Cohesion | Coupling
 
-Must be able to make changes to a service without changing anything else so we need stable contracts between services
+| *Low*
+a| Problem space spread across many things
+a| Problem space grouped together
 
-==== Benefits
+| *High*
+a| Problem space grouped together
+a| Problem space spread across many things
+|===
 
+=== Independent deployments
+
+Able to make changes to a service without changing anything else
+
+[cols="1,2"]
 |===
 | Diagram | Benefit
 
@@ -31,9 +67,9 @@ a|
 
 title: Independent teams
 
-rectangle A as "Team A\n<$osa_user_large_group>" #lightcoral
-rectangle B as "Team B\n<$osa_user_large_group>" #palegreen
-rectangle C as "Team C\n<$osa_user_large_group>" #cornflowerblue
+rectangle A as "Red Team\n<$osa_user_large_group>" #lightcoral
+rectangle B as "Green Team\n<$osa_user_large_group>" #palegreen
+rectangle C as "Blue Team\n<$osa_user_large_group>" #cornflowerblue
 hexagon serviceA as "Cart"
 hexagon serviceB as "Picture"
 hexagon serviceC as "User"
@@ -46,25 +82,9 @@ C -D-> serviceC
 
 a| Teams can work independently of one another
 
-* Specialise within subdomain
-** "Should be as big as your head" (What you find easily understood)
 * Build and deploy independently
-
-a|
-[plantuml]
-----
-@startuml
-title: Shared database
-
-rectangle monolitth {
-    hexagon serviceA as "Service A"
-    hexagon serviceB as "Service B"
-}
-
-@enduml
-----
-
-a| Service A adds
+** Not coupled to other teams' development progress
+* Team can specialise within subdomain
 
 a|
 [plantuml]
@@ -82,14 +102,11 @@ serviceB --> database
 ----
 |===
 
-==== Issues if services are not independently deployable
+=== Issues when you can't deploy independently
 
-If services are not modelled around a Business domain (DDD)
+If a feature is spread across many services (*high coupling* / *low cohesion*)
 
-* If a feature to spread across many services
-** Coordinate releases
-** Update in many places
-
+[cols="^1,^1,^1"]
 |===
 | Current | Situation | Problem
 
@@ -154,9 +171,11 @@ Basket -> Checkout
 ----
 |===
 
-== Why
+== Versatility
 
-=== Composability
+Microservices can be used in different contexts
+
+=== Benefits
 
 Business wants to reuse `user-profile` implementation for a different project
 
@@ -199,6 +218,7 @@ service <-R- B
 With monoliths you have to deploy your entire app even-though you only want to scale the `picture` capability, which comes at a higher running cost as you are paying for resources that you don't need.
 Whereas with microscervices you're only paying for what you need.
 
+[cols="^1,^1"]
 |===
 | Mono | Micro
 
@@ -249,22 +269,23 @@ lb --> picturen
 ----
 |===
 
-=== Smaller (Able to use new technology)
+=== Technology freedom
 
-New (library/version) comes out with new cool features that would be beneficial
+New (language/library/version) comes out with new cool features that would be beneficial
 
+[cols="^1,^1"]
 |===
 | Mono | Micro
 
 a|
-Stuck with previous technology choices/versions, so you have to live with when adding new features without upgrading or update entire system which may cause breaking changes
+Stuck with previous technology choices/versions. You either have to live with adding new features using the old version or update entire system which may cause breaking changes
 [plantuml]
 ----
 @startuml
 title Complete re-write
 
-node s1 as "Monolith (Python 2)"
-node s2 as "Monolith (Python 3)"
+node s1 as "Monolith (Python 2)" #lightcoral
+node s2 as "Monolith (Python 3)" #palegreen
 cloud months as "Months of development"
 
 s1 --> months
@@ -301,7 +322,7 @@ Website <-l- s3
 ==== Example
 
 Khan academy migrating from a Python 2 monolith to Go microservices as Python 2 is end of life.
-If they were using microservices when Python 2 was announced to be end of life back in 2008 with an end of life in 2015. They could've started using a different language for future services and slowly migrate older services to a newer language.
+If they were using microservices when Python 2 announced in 2008 that it would be end of life in 2015. They could've started using Python 3 or a different language for future services and incrementally migrate older services.
 https://blog.khanacademy.org/go-services-one-goliath-project/[Khan blog post about migration]
 
 === Fault tolerant
