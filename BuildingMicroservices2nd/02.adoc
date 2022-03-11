@@ -6,11 +6,11 @@
 
 Information hiding (Encapsulation)::
 Expose as little implementation details through your api.
-The connections between services are assumptions which the services make about each other.
+Can change implementation without breaking consumers
 
 Cohesion - relationship of things within a microservice ::
 The code that changes together, stays together.
-Gather together the things that change for the same reasons.
+Group things that change for the same reasons.
 Separate those things that change for different reasons.
 
 Coupling - relationship with other microservices ::
@@ -19,14 +19,13 @@ I can add new features to one service, but I can optionally choose to update ano
 
 == Desired design
 
-* Services can be created in parallel as communicate via interfaces and not concerned with implementation details of other services.
+* Services can be created in parallel as communicate via interfaces and by implementation details
 * Smaller and easier to comprehend.
-Only looking at a smaller sub set of problem domain
 * Flexibility
 ** Services can be changed independently
 ** Services can be combined in different ways for different future business requirements
 
-== Coupling
+== Types of Coupling
 
 .Loose coupling -> tight coupling
 [graphviz]
@@ -37,11 +36,12 @@ graph name {
 }
 ----
 
-=== Domain coupling
+== Domain coupling
 
 `Order processor` is coupled to `Warehouse` and `Payment` to operate which is unavoidable.
 
 WARNING: If a service is coupled to many services then it's a sign that it's doing too much.
+Violates Single responsibility
 
 [plantuml]
 ----
@@ -57,10 +57,41 @@ Order --> Payment : Take payment
 @enduml
 ----
 
-IMPORTANT: Encapsulation is important.
-Only expose what you need to
+=== Temporal coupling
 
-=== Pass-through
+If Warehouse was down then all services that call Warehouse would also fail
+
+.Sync calls
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse #lightcoral
+
+Order --> Warehouse : Reserve stock
+@enduml
+----
+
+However, If we had a queue in-between the services then events would be saved and can be processed once warehouse is running again
+
+.Async calls
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse #lightcoral
+queue Stock as "Stock Topic"
+
+Order --> Stock : Reserve stock event
+Stock --> Warehouse : Consume reserve stock event
+@enduml
+----
+
+== Pass-through
 
 `Order processor` is including data for `Shipping` because it *knows* `Warehouse` calls `Shipping`
 
@@ -135,7 +166,7 @@ Shipping --> Order : Get shipping manifest
 @enduml
 ----
 
-=== Common Coupling
+== Common Coupling
 
 Problem can occur if multiple services share a database
 
@@ -193,5 +224,5 @@ Warehouse --> Order : PICKING || SHIPPED requests
 @enduml
 ----
 
-=== Content coupling
+== Content coupling
 
