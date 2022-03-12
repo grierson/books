@@ -38,7 +38,7 @@ graph name {
 
 == Domain coupling
 
-`Order processor` is coupled to `Warehouse` and `Payment` to operate which is unavoidable.
+`Order processor` is coupled to `Warehouse` and `Payment` in order to process orders which is unavoidable.
 
 WARNING: If a service is coupled to many services then it's a sign that it's doing too much.
 Violates Single responsibility
@@ -59,7 +59,7 @@ Order --> Payment : Take payment
 
 === Temporal coupling
 
-If Warehouse was down then all services that call Warehouse would also fail
+If `Order Processor` called `Warehouse` directly but it currently down then `Processing Orders` would fail
 
 .Sync calls
 [plantuml]
@@ -74,7 +74,7 @@ Order --> Warehouse : Reserve stock
 @enduml
 ----
 
-However, If we had a queue in-between the services then events would be saved and can be processed once warehouse is running again
+However, If we had a queue in-between then events would be saved and could be processed later once warehouse is up and running again
 
 .Async calls
 [plantuml]
@@ -104,12 +104,18 @@ hexagon Order as "Order Processor"
 hexagon Warehouse
 hexagon Shipping
 
-Order --> Warehouse : Send order request\n(Contains Shipping manifest)
+Order --> Warehouse : Send order request
+note on link
+    Includes Shipping Manifest
+end note
 Warehouse --> Shipping : Take payment
+note on link
+    Requires Shipping Manifest
+end note
 @enduml
 ----
 
-One option is to bypass the middle man (`warehouse`).
+One option is to bypass the middle man (`Warehouse`).
 However, this now means `Order processing` as to
 
 . Have domain coupling with `Shipping`
