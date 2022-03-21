@@ -1,9 +1,0 @@
-= Immutable
-
-Benefits
-
-* Data access without race conditions
-* Predictable
-* Equality check is fast (Compare commit hash)
-* Concurrency safety
-

@@ -1,3 +1,0 @@
-= Docker + Kubernetes
-
-https://github.com/grierson/grierson/blob/master/Microservices/containers.adoc[forward to notes on containers]

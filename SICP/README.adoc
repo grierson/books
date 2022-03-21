@@ -1,3 +1,0 @@
-= SICP
-
-https://sarabander.github.io/sicp/html/
