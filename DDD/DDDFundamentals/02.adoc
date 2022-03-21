@@ -1,0 +1,43 @@
+= Section 2
+
+* Developers are a problem solver not code monkeys
+* Design for the problem not your tools
+* DDD Tackles business complexity not technical complexity
+* Solving problems, not just coding
+* Break problems down
+
+[quote, Theodore Levitt]
+People don’t want quarter-inch drill bits. They want quarter-inch holes.
+
+People want to fix a problem, they don't care about the solution
+
+== Glossary
+
+Domain::
+A group of related items, topics, or subjects.
+
+Domain Experts::
+People who are experts within the domain/field/area
+
+Sub Domain::
+Smaller part of Domain
+
+== Do
+
+* Talk to `Domain experts` so you can implement the solution using their language
+* Focus on a single `Sub domain` at a time
+** Divide and conquer
+* Focus on how you are going to design your solution not the design implementation
+
+
+|===
+| Purchase materials | tasks | ubiquitous language | unique problems 
+| Engineering | tasks | ubiquitous language | unique problems 
+| Manage employees | tasks | ubiquitous language | unique problems 
+| Marketing | tasks | ubiquitous language | unique problems 
+| Sales | tasks | ubiquitous language | unique problems 
+|===
+
+== Don't
+
+* DDD for basic CRUD/Data driven or really basic domain

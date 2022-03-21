@@ -1,0 +1,42 @@
+= Section 3
+
+* Talk with `Domain Expert` to understand clients problems.
+* Determine scope
+** Identify sub domains and set expectations
+* Make sure you are on the same page as the `domain expert`
+* Focus on how the domain currently works not how you will implement it
+* Make implicit knowledge explicit
+
+
+[plantuml]
+----
+@startuml
+allowmixing
+
+package Users {
+    rectangle Patient
+    rectangle Client
+    Patient .. Client
+}
+
+package Veterinarian {
+    class Appointment {
+        + type (Office visit, Vaccination)
+    }
+    class Surgery {
+        + type (Spray)
+    }
+}
+
+package Resources {
+    rectangle ExamRoom
+    rectangle Doctor
+    rectangle OR
+    rectangle Recovery
+}
+
+Client --> Veterinarian : Schedules
+Veterinarian --> Resources : Requires
+
+@enduml
+----

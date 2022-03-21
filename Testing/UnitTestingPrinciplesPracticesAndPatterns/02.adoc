@@ -1,0 +1,61 @@
+= What is a unit test
+
+== Glossary
+
+Classical (Chicago, Black box, Bottom up)::
+Less brittle as only testing the output not the implementation.
+* `(add 5 5) => 10` We don't care how it works just as long as it gives me the correct results
+
+London (Mockist, Top down)::
+Testing the internal implementation by mocking all collaborators
+* Growing Object-Oriented Software guided by Tests
+
+Shared dependency::
+Mutable state shared across tests
+
+== Avoid shared dependency
+The order of the execution matters when sharing mutable state across tests which can cause race conditions with the tests making them flaky
+
+[source,clojure]
+----
+(def state (atom ""))
+
+(fact "abc is not a long string"
+  (swap state "abc")
+  (long-str? state) => false)
+
+(fact "abcdefg is a long string"
+  (swap state "abcdefg")
+  (long-str? state) => true)
+
+(defn long-str? [s]
+  (> (count s) 5))
+----
+
+Unit test::
+* Verifies small piece of code.
+** Classical -> Unit of behaviour (function)
+** London -> Object
+* Quick (Should run instantly)
+* Isolated
+** Classical -> Isolate the test
+*** Run tests in parallel (Faster running test suite)
+** London -> Isolate the implementation
+*** Test covers specific component (If test fails you know what exactly is failing)
+
+[source,clojure]
+----
+(fact "classical"
+  (let [product "shampoo"
+        store (->Store)
+        _ (stock store product 10)
+        _ (purchase (->Customer) store product 5)]
+    (getInventory store product) => 5))
+
+(fact "london"
+  (let [product "shampoo"
+        storeMock (reify IStore (in-stock? [product] true))
+        _ (stock storeMock product 10)
+        _ (purchase (->Customer) store product 5)]
+    (called stockMock RemoveInventory) => 1))
+----

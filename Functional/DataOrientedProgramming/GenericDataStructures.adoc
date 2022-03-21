@@ -1,0 +1,27 @@
+= Represent data with Generic Data structures
+
+Use [map, list, vector] not classes
+
+Benefits
+
+* Can use generic functions (Better to have 100 functions on 1 data structures)
+* Flexible data
+
+== Generic functions
+
+* clojure core functions (select-keys, partition, cycle)
+* lodash
+
+== Flexible data model
+
+If we wanted to add a Fullname property to the data
+
+* Static OOP -> Create new class AuthorWithFullname
+* Dynamic FP -> `(assoc author :fullname "Alice Wonderland")` 
+
+== Cons
+
+* Performance hit
+* Data shape has to be documented manually
+* No compile time checks
+** Type system only stops smaller errors, Tests solve most of it.

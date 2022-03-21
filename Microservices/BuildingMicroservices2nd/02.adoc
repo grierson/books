@@ -1,0 +1,333 @@
+= Chapter 2 - Model Microservices
+
+"A structure is stable if cohesion is strong and coupling is low"
+
+== Glossary
+
+Information hiding (Encapsulation)::
+Expose as little implementation details through your api.
+Can change implementation without breaking consumers
+
+Cohesion - relationship of things within a microservice ::
+The code that changes together, stays together.
+Group things that change for the same reasons.
+Separate those things that change for different reasons.
+
+Coupling - relationship with other microservices ::
+Loosely coupled changes to one service should not **require** changes to another.
+I can add new features to one service, but I can optionally choose to update another service to use that new feature, but I'm not required too.
+
+== Desired design
+
+* Services can be created in parallel as communicate via interfaces and by implementation details
+* Smaller and easier to comprehend.
+* Flexibility
+** Services can be changed independently
+** Services can be combined in different ways for different future business requirements
+
+== Types of Coupling
+
+.Loose coupling -> tight coupling
+[graphviz]
+----
+graph name {
+    rankdir="LR"
+    Domain --  "Pass-through" -- Common -- Content
+}
+----
+
+== Domain coupling
+
+`Order processor` is coupled to `Warehouse` and `Payment` in order to process orders which is unavoidable.
+
+WARNING: If a service is coupled to many services then it's a sign that it's doing too much.
+Violating the Single responsibility principle.
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Payment
+
+Order --> Warehouse : Reserve stock
+Order --> Payment : Take payment
+@enduml
+----
+
+=== Temporal coupling
+
+If `Order Processor` called `Warehouse` directly but it's currently down then `Processing Orders` within `Order Processor` would fail
+
+.Sync calls
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse #lightcoral
+
+Order --> Warehouse : Reserve stock
+@enduml
+----
+
+However, If we had a queue in-between then events would be saved to the event log and could be processed later once `Warehouse` is up and running again
+
+.Async calls
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse #lightcoral
+queue Stock as "Stock Topic"
+
+Order --> Stock : Reserve stock event
+Stock --> Warehouse : Consume reserve stock event
+@enduml
+----
+
+== Pass-through
+
+NOTE: Service is implicitly coupled to a downstream service.
+So changes downstream break services upstream
+[plantuml]
+
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order --> Warehouse : Send order request
+note on link
+    Includes Shipping Manifest
+end note
+Warehouse --> Shipping : Take payment
+note on link
+    Requires Shipping Manifest
+end note
+@enduml
+----
+
+`Order processor` is including data for `Shipping` because it *knows* `Warehouse` calls `Shipping`.
+If `Shipping` required a new format then both `Order` and `Warehouse` would need to be updated.
+Furthermore it would require a lock-step deployment for all 3 services
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor" #orange
+hexagon Warehouse #orange
+hexagon Shipping #lightcoral
+
+
+Order --> Warehouse : Send order request
+
+note bottom of Order
+    Needs to be updated
+end note
+
+Warehouse --> Shipping : Take payment
+
+note bottom of Warehouse
+    Needs to be updated
+end note
+
+note bottom of Shipping
+    Requires new format
+end note
+@enduml
+----
+
+One option is to bypass the middle man (`Warehouse`).
+However, this now means `Order processing` has to
+
+. Have domain coupling with `Shipping`
+. Manage `reserving` and `removing` stock from the warehouse
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order -> Warehouse : (1) Reserve stock
+Order -> Shipping : (2) Shipping manifest
+Order --> Warehouse : (3) Remove stock
+@enduml
+----
+
+Another option is to have `Warehouse` create the `Shipping manifest`.
+However `Order processor` would have to be updated if `Warehouse` required more data to generate the `Shipping manifest`
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+hexagon Shipping
+
+Order --> Warehouse : Send order request
+
+note on link
+    Data to create a Shipping manifest
+end note
+Warehouse --> Shipping : Dispatch package request
+note on link
+    Generated Shipping manifest
+end note
+@enduml
+----
+
+A final option is to use `hypermedia links`. `Warehouse` knows nothing about the structure of the `Shipping manifest`, It just passes the `link` to `Shipping`.
+If `Shipping` requires the data in a different format then we only need to update `Order` (Producer) and `Shipping` (Consumer)
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon Order as "Order Processor" #lightcoral
+hexagon Warehouse
+hexagon Shipping #lightcoral
+
+Order --> Warehouse : Send order request
+note on link
+    Contains Shipping manifest href link
+end note
+Warehouse --> Shipping : Take payment
+Shipping --> Order : Get shipping manifest
+@enduml
+----
+
+== Common Coupling
+
+Problem can occur if multiple services share a database as there is nothing managing the state transitions of the records.
+
+[plantuml]
+----
+@startuml
+
+hexagon Order as "Order Processor"
+hexagon Warehouse
+database Country
+
+Order --> Country
+Warehouse --> Country
+@enduml
+----
+
+The state machine below shows the transitions that an order should go through.
+However, if multiple services are updating the state they need to be coordinated to ensure no bad states occur.
+
+.State transitions for an order
+[plantuml]
+----
+@startuml
+left to right direction
+hide empty description
+
+[*] --> PLACED
+PLACED --> PAID
+PLACED --> CANCELED
+PAID --> PICKING
+PAID --> CANCELED
+PICKING --> CANCELED
+PICKING --> SHIPPED
+@enduml
+----
+
+One solution is to create a coordinator 'Order service' who can accept/reject requests to update the state.
+
+[plantuml]
+----
+@startuml
+left to right direction
+
+hexagon OrderProc as "Order Processor service"
+hexagon Warehouse as "Warehouse service"
+file "Order microservice" #line.dashed; {
+    hexagon Order as "Order service"
+    database OrderDB as "Order table"
+}
+
+Order --> OrderDB
+
+OrderProc --> Order : PLACED || PAID requests
+Warehouse --> Order : PICKING || SHIPPED requests
+@enduml
+----
+
+== Content coupling
+
+Common coupling.
+Sharing a database - bad encapsulation/coupling
+
+== Domain-driven design
+
+Ubiquitous language (Glossary)::
+Define common terms to help communication and to be used in code
+
+Aggregate ::
+Entity that manages many Entities and Value Objects.
+A real world object (Order, Invoice, Stock Item).
+Aggregates have a lifecycle and should be managed within a state machine
+
+Bounded Context ::
+Explicit boundary within system.
+Applies Encapsulation
+
+
+=== Example Bounded Context
+
+Both Bounded contexts `Warehouse` and `Finance` have their own internal concepts (grey boxes) but they both need to know about the amount of stock of an item. So you can create an external model `StockCount` which only exposes the required data for each Bounded context whilst hiding the internal concepts
+
+[plantuml]
+----
+@startuml
+allow_mixing
+
+object StockCount {
+    Count = 123
+}
+
+package Warehouse {
+    rectangle Trolley #lightgrey
+    rectangle Picker #lightgrey
+    rectangle PickList #lightgrey
+    rectangle Shelf #lightgrey
+
+    object StockItem {
+        Count = 123
+        Shelf = G6
+    }
+    StockItem .. StockCount
+}
+
+package Finance {
+    rectangle LedgerEntry #lightgrey
+    rectangle CompanyValuation #lightgrey
+
+    object StockReport {
+        StockCount = 123
+        StockItemValue = $5.99
+        TotalStockValue = StockCount * StockItemValue
+    }
+    StockReport .. StockCount
+}
+@enduml
+----

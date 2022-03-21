@@ -1,0 +1,7 @@
+= Data Oriented Programming
+
+Principles
+
+* Separate code from data
+* Generic Data Structures
+* Immutability 

@@ -1,0 +1,7 @@
+= Data store
+
+== Why
+
+* Use specific database technology per service
+** Redis for quick short term data
+** Postgres for long term
