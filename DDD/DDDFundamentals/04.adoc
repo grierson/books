@@ -1,0 +1,37 @@
+= Section 4 - Modeling
+
+== Glossary
+
+Anemic domain model::
+Just updates state (CRUD)
+
+Rich domain model::
+Implements many domain behaviours
+
+Domain Layer::
+Concepts of the business and rules.
+
+Event::
+Thing with Identity for tracking and persistence
+
+Entity::
+Hash-map with identity so that it can be tracked and persistent
+
+Value Object::
+Hash-map without identity
+
+Bounded Context::
+Boundaries of a subset of a domain
+
+Behaviour::
+What events need so occur
+
+== Entity
+
+Defined by entity.
+Need to track and properties can change
+
+== Sync data across Bounded Contexts
+
+Eventual consistency
+[plantuml]

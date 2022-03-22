@@ -1,0 +1,7 @@
+= Section 5 - Value Objects and Services
+
+Value Objects::
+Just a way to group data.
+
+Service::
+Stateless function which my have side effects

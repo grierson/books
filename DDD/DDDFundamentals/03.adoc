@@ -1,5 +1,21 @@
 = Section 3
 
+== Glossary
+
+* Core domain
+** Something that can't be outsourced
+* Bounded Context
+** Independent system
+* Shared kernel
+** Shared code across bounded contexts (Logging)
+* Ubiquitous language (Shared common language)
+** Explict about what you are talking about
+** Developers shouldn't try to fit Domain terms into programming terms as it might be a lossy translation
+** Avoids telephone game issue
+** TIP: Explain your understanding back to Domain expert
+
+== Points
+
 * Talk with `Domain Expert` to understand clients problems.
 * Determine scope
 ** Identify sub domains and set expectations
@@ -7,36 +23,25 @@
 * Focus on how the domain currently works not how you will implement it
 * Make implicit knowledge explicit
 
+Both `Bounded Context` have a `Client` which refers to the same `Client` however a different model is used in both because they are only the properties that we are interested in within that Bounded Context.
+So that both models can change independently and are not coupled.
 
 [plantuml]
 ----
 @startuml
-allowmixing
-
-package Users {
-    rectangle Patient
-    rectangle Client
-    Patient .. Client
-}
-
-package Veterinarian {
-    class Appointment {
-        + type (Office visit, Vaccination)
-    }
-    class Surgery {
-        + type (Spray)
+package Appointment {
+    class "Client" as c1 {
+        + Name
+        + Credit card
+        + Address
     }
 }
 
-package Resources {
-    rectangle ExamRoom
-    rectangle Doctor
-    rectangle OR
-    rectangle Recovery
+package Billing {
+    class "Client" as c2 {
+        + Name
+        + Identity
+    }
 }
-
-Client --> Veterinarian : Schedules
-Veterinarian --> Resources : Requires
-
 @enduml
 ----
