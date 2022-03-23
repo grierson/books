@@ -1,0 +1,67 @@
+= Domain Driven Development Fundamentals
+
+== Glossary
+
+Domain (Problem space)::
+A group of related items, topics, or subjects.
+Problem space
+
+Domain Layer::
+Concepts of the business and rules.
+
+Core domain::
+Something that can't be outsourced
+
+Domain Experts::
+People who are experts within the domain/field/area
+
+Sub Domain::
+Smaller part of Domain
+
+Bounded Context::
+Independent system
+
+Shared kernel::
+Code reuse across bounded contexts (Logging)
+
+Service (Orchestrator) ::
+Stateless function which my have side effects
+
+Ubiquitous language (Shared common language)::
+** Explict about what you are talking about
+** Use Domain terms instead of programming terms as it might be a lossy translation
+** Avoids telephone game issue
+
+Anemic domain model::
+Just updates state (CRUD)
+
+Rich domain model::
+Implements many domain behaviours
+
+Event::
+Note of something that happened
+
+Entity (Object)::
+Something with an identity so that it can be tracked and persisted
+
+Value Object::
+Just data.
+Hash-map without identity
+
+Aggregate Root::
+Aggregate of `Objects` with invariants and treated as a unit for data changes
+
+Behaviour::
+Some process
+
+== Tips
+
+* Explain your understanding back to Domain expert to identify gaps in knowledge
+
+* Aggregate
+** Acts as API to it's Objects
+** Adds invariants so that it's objects can't be in an invalid state.
+** Rules
+*** Enforces invariants?
+*** Saving change can save entire aggregate?
+*** Cascading delete is okay?
