@@ -1,13 +1,22 @@
 = Domain Driven Development Fundamentals
 
+Tools to model the problem space (Domain)
+
+Focus on behaviours/events of domain * Schedule appoint -> Appointment Scheduled * Book a room -> Room booked * Add item to calendar -> Item Added to calendar * Notify attendees -> Attendees notified
+
 == Glossary
 
 Domain (Problem space)::
 A group of related items, topics, or subjects.
-Problem space
 
 Domain Layer::
-Concepts of the business and rules.
+Modeling the Domain concepts and rules
+
+Domain Service::
+Orchestrator function for many objects. (stateless but can be side effectful)
+* Process Order
+* Send Message
+* Transfer Between Accounts
 
 Core domain::
 Something that can't be outsourced
@@ -45,11 +54,14 @@ Entity (Object)::
 Something with an identity so that it can be tracked and persisted
 
 Value Object::
-Just data.
-Hash-map without identity
+Hash-map without identity.
+(DateTimeRange - Has start and end time fields)
+
+Aggregate::
+Transactional graph of objects
 
 Aggregate Root::
-Aggregate of `Objects` with invariants and treated as a unit for data changes
+Api and maintains invariants for it's objects
 
 Behaviour::
 Some process
@@ -62,6 +74,7 @@ Some process
 ** Acts as API to it's Objects
 ** Adds invariants so that it's objects can't be in an invalid state.
 ** Rules
-*** Enforces invariants?
+*** Enforces invariants? All objects in a valid state
 *** Saving change can save entire aggregate?
-*** Cascading delete is okay?
+*** Deleting the aggregate also deletes all its objects? Is that okay?
+** Group code by aggregate
